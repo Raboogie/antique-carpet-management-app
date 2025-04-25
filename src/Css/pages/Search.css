@@ -1,0 +1,19 @@
+.search-container {
+	/*background-color: rgb(176, 171, 171);*/
+	/*border-radius: 10px;*/
+	/*box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+	display: flex;
+	flex-direction: column;
+	/*background-color: whitesmoke;*/
+	max-width: 1200px;
+	height: 96lvh;
+	margin-inline: auto;
+}
+
+.display-carpet-form-btn {
+	display: flex;
+	justify-content: end;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	gap: 1rem;
+}

@@ -1,0 +1,40 @@
+.display-images {
+	height: 100%;
+	padding: 28px 72px 0 72px;
+}
+.display-images-cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: 2fr;
+	gap: 20px;
+	padding-bottom: 20px;
+}
+
+.display-images-cards h4 {
+	font-size: 24px;
+	margin: 10px 0 5px;
+}
+
+.display-images-cards p {
+	font-size: 18px;
+	margin-bottom: 30px;
+}
+.display-images-cards img {
+	object-fit: cover;
+	width: 100%;
+	max-height: 100%;
+}
+
+.homepage-banner {
+	background: url('../../../public/images/homepage-banner.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	height: 50vh;
+}
+
+.homepage-greetings p {
+	padding: 10px 200px 0 200px;
+	text-align: center;
+	font-size: 24px;
+}

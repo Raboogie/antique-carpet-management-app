@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&display=swap');
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-bar {
+	/*background-color: #61dafb;*/
+	background: linear-gradient(
+		60deg,
+		rgba(84, 58, 183, 1) 0%,
+		rgba(0, 172, 193, 1) 100%
+	);
+	color: white;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.nav-bar-menu ul {
+	/*padding: 0 0 0 200px;*/
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: 1fr;
+	padding-top: 5px;
+}
+
+.nav-bar-btn {
+	cursor: pointer;
+	font-size: x-large;
+	color: white;
+	background: transparent;
+	border: none;
+	padding: 0.5rem 0.5rem;
+}
+
+.nav-bar-btn:hover {
+	background-color: lightskyblue;
+	border-radius: 3rem;
+	transition: all 0.2s ease-in;
+}
+
+.nav-logo {
+	padding-left: 5px;
+}
+
+.nav-logo h1 {
+	font-size: xx-large;
+	text-decoration: underline;
+	/*font-family: 'Lily Script One', cursive;*/
+}
+
+.nav-logo h6 {
+	font-size: small;
+	margin-top: -5px;
+	padding-bottom: 5px;
+}
