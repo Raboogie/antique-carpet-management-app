@@ -1,6 +1,7 @@
 import '../Css/pages/Login.css';
 import { loginWithEmailAndPassword } from "../lib/firebase/Authentication/EmailAndPasswordAuth.ts";
 import {useState} from "react";
+import {useNavigate} from "react-router";
 
 
 const Login = () => {
@@ -8,6 +9,8 @@ const Login = () => {
 		email: "",
 		password: "",
 	});
+
+	const navigate = useNavigate();
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -20,8 +23,12 @@ const Login = () => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		loginWithEmailAndPassword(formData.email, formData.password).then(r =>
-			console.log(r)
+		loginWithEmailAndPassword(formData.email, formData.password).then(r => {
+			console.log(r);
+			if (r){
+				navigate("/search");
+			}
+		}
 		);
 	}
 	return (

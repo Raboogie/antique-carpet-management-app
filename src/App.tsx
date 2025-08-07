@@ -10,8 +10,8 @@ import SignUp from './pages/SignUp.tsx'
 import Login from './pages/Login';
 import Search from './pages/Search';
 import Contact from './pages/Contact';
-import UserContextProvider, {UserContextValue} from "./lib/UserContext.tsx";
-import {useState} from "react";
+import UserContextProvider from "./lib/UserContext.tsx";
+//import {useState} from "react";
 
 const routes = createBrowserRouter(
 	createRoutesFromChildren(
@@ -26,13 +26,24 @@ const routes = createBrowserRouter(
 );
 
 function App() {
-	const [user] = useState<UserContextValue>({
-		logUserOut: () => {},
-		loggedIn: false,
-	})
+	// const [user] = useState<UserContextValue>({
+	// 	userId: '',
+	// 	setUserId: () => {},
+	// 	logUserOut: () => {},
+	// 	loggedIn: false,
+	// 	userRole: '',
+	// 	setUserRole: () => {},
+	// 	userEmail: '',
+	// 	setUserEmail: () => {},
+	// 	displayName: '',
+	// 	setDisplayName: () => {},
+	// 	currentUser: null,
+	// 	loading: true
+	//
+	// })
 	return (
 		<>
-			<UserContextProvider value={user}>
+			<UserContextProvider>
 				<RouterProvider router={routes} />
 			</UserContextProvider>
 
