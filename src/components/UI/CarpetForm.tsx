@@ -18,7 +18,9 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 const userInputSchema = z.object({
-	carpetNum: z.number().min(1, 'Carpet Number is required').transform(Number),
+	carpetNum: z.string().regex(/^[a-zA-Z0-9]+$/, {
+		message: 'Carpet number can only contain Letters and Numbers.',
+	}),
 	carpetType: z.string().nonempty('Carpet Type is required'),
 	width: z.number().min(1, 'Width is required').transform(Number),
 	length: z.number().min(1, 'Length is required').transform(Number),
@@ -91,9 +93,7 @@ export default function CarpetForm() {
 					<div className="carpet-details-info-number">
 						<label htmlFor="carpetNum">Carpet Number</label>
 						<TextField
-							{...register('carpetNum', {
-								valueAsNumber: true,
-							})}
+							{...register('carpetNum')}
 							id="carpetNum"
 							label="Enter Carpet Number"
 							variant="outlined"
@@ -202,7 +202,7 @@ export default function CarpetForm() {
 					name="image"
 					control={control}
 					render={({
-						field: { onChange, onBlur, value, name, ref },
+						field: { onChange, value},
 					}) => (
 						<FileUpload
 							onFileSelect={onChange}

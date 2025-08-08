@@ -6,6 +6,7 @@
 
 .carpet-details-container {
 	min-height: 100vh;
+	border-radius: 10px;
 	background: linear-gradient(
 		135deg,
 		rgba(84, 58, 183, 0.1) 0%,
@@ -333,25 +334,38 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
 	.carpet-details-container {
-		padding: 1rem;
+		padding: 1.5rem;
 	}
 
 	.carpet-details-header h1 {
-		font-size: 2.5rem;
+		font-size: 2.2rem;
+	}
+
+	.carpet-details-header p {
+		font-size: 1rem;
+	}
+
+	.carpet-details-form {
+		gap: 2rem;
 	}
 
 	.carpet-details-info-section,
 	.carpet-details-dimensions-section {
-		padding: 1.5rem;
+		padding: 2rem;
+		grid-template-columns: 1fr;
+	}
+
+	.carpet-details-info-section h2 {
+		font-size: 1.5rem;
 	}
 
 	.carpet-details-dimensions-section {
-		grid-template-columns: 1fr;
 		gap: 1.5rem;
 	}
 
 	.carpet-details-dimensions-unit-buttons {
-		justify-content: center;
+		flex-direction: column;
+		gap: 0.5rem;
 	}
 
 	.carpet-details-submit-button {
@@ -361,5 +375,33 @@
 
 	.carpet-details-submit-button .MuiButton-root {
 		width: 100%;
+	}
+}
+
+@media (max-width: 480px) {
+	.carpet-details-container {
+		padding: 1rem;
+	}
+
+	.carpet-details-header h1 {
+		font-size: 1.8rem;
+	}
+
+	.carpet-details-header p {
+		font-size: 0.9rem;
+	}
+
+	.carpet-details-info-section,
+	.carpet-details-dimensions-section {
+		padding: 1.5rem;
+	}
+
+	.carpet-details-dimensions-unit-buttons .MuiButton-root {
+		padding: 0.8rem 1.5rem;
+	}
+
+	.carpet-details-submit-button .MuiButton-root {
+		padding: 0.8rem 1.5rem;
+		font-size: 0.9rem;
 	}
 }
