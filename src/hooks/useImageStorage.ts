@@ -8,7 +8,7 @@ import {
 	UploadTaskSnapshot,
 	StorageError,
 } from 'firebase/storage';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {doc, setDoc, serverTimestamp, getDoc, updateDoc, arrayUnion} from 'firebase/firestore';
 
 export const useImageStorage = (data: InputFormData | null) => {
 	const [progress, setProgress] = useState<number>(0);
@@ -21,9 +21,10 @@ export const useImageStorage = (data: InputFormData | null) => {
 		const uploadImages = async () => {
 			try {
 				const urlPromises = data.image.map((file) => {
+					const carpetNumber = data.carpetNum;
 					const storageRef = ref(
 						fireBaseStorage,
-						`images/${file.name}`
+						`images/${carpetNumber}/${file.name}`
 					);
 					const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -57,11 +58,31 @@ export const useImageStorage = (data: InputFormData | null) => {
 				// Add carpet data to Firestore
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const { image, ...carpetData } = data;
-				await addDoc(collection(db, 'carpets'), {
-					...carpetData,
-					imageUrls: downloadedUrls,
-					createdAt: serverTimestamp(),
-				});
+				const docRef = doc(db, 'carpets', `${carpetData.carpetNum}`);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    await setDoc(docRef, {
+                        ...carpetData,
+                        imageUrls: downloadedUrls,
+                        createdAt: serverTimestamp(),
+                    });
+                } else {
+                    await updateDoc(docRef,{
+                        "carpetType": carpetData.carpetType,
+                        "length": carpetData.length,
+                        "width": carpetData.width,
+                        "unit": carpetData.unit,
+                        "imageUrls": arrayUnion(...downloadedUrls),
+                        createdAt: serverTimestamp()
+                    })
+                }
+
+				// await addDoc(collection(db, 'carpets'), {
+				// 	...carpetData,
+				// 	imageUrls: downloadedUrls,
+				// 	createdAt: serverTimestamp(),
+				// });
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			} catch (err: any) {
 				setFirebaseError(err);
