@@ -173,18 +173,3 @@ label input {
 		margin-left: auto;
 	}
 }
-
-/* Dark mode (optional future-proofing) */
-@media (prefers-color-scheme: dark) {
-	.image-form {
-		background-color: #2a2a2a;
-		border-color: #444;
-	}
-	.output li {
-		background-color: #383838;
-		border-color: #4a4a4a;
-	}
-	.output::-webkit-scrollbar-thumb {
-		background: #555;
-	}
-}
