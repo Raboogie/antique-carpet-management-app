@@ -263,14 +263,33 @@
 
 .carpet-details-submit-button .MuiButton-outlined {
 	border: 2px solid rgba(148, 163, 184, 0.5);
+    padding: 0.8rem 4.4rem;
 	color: #64748b;
 }
 
 .carpet-details-submit-button .MuiButton-outlined:hover {
 	border: 2px solid rgba(148, 163, 184, 0.8);
-	background: rgba(148, 163, 184, 0.05);
+	/*background: rgba(148, 163, 184, 0.05);*/
 	transform: translateY(-2px);
-	box-shadow: 0 10px 25px rgba(148, 163, 184, 0.2);
+    box-shadow: 0 20px 40px rgba(84, 58, 183, 0.3);
+}
+.carpet-details-submit-button .MuiButton-outlined::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+            60deg,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.1) 100%
+    );
+    transition: left 0.5s ease;
+}
+
+.carpet-details-submit-button .MuiButton-outlined:hover::before {
+    left: 100%;
 }
 
 .carpet-details-submit-button .MuiButton-contained {
@@ -282,6 +301,16 @@
 	border: none;
 	position: relative;
 	overflow: hidden;
+}
+
+.carpet-details-submit-button .MuiButton-outlined {
+    background: linear-gradient(
+            60deg,
+            indianred,
+            lightcoral
+    );
+    border: 2px solid rgba(148, 163, 184, 0.5);
+    color: white;
 }
 
 .carpet-details-submit-button .MuiButton-contained:hover {
