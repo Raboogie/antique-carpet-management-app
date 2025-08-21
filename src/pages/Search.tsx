@@ -5,7 +5,6 @@ import CarpetSearch from '../components/UI/CarpetSearch.tsx';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router';
 import { useUserContext } from '../lib/UserContext.tsx';
-import * as React from 'react';
 
 // interface CarpetDetails {
 // 	number: string;
@@ -74,9 +73,7 @@ const Search = () => {
 							Sign Out
 						</Button>
 					) : (
-						<Button variant="contained">
-							<Link to={'/login'}>Admin login</Link>
-						</Button>
+						""
 					)}
 				</div>
 				<div>
