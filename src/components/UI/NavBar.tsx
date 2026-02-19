@@ -1,10 +1,13 @@
 import { NavBarData } from '../../lib/constants/NavBarData';
 import '../../Css/UI/NavBar.css';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
+import { useUserContext } from '../../lib/UserContext.tsx';
 
 export const NavBar = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const userCtx = useUserContext();
+	const navigate = useNavigate();
 
 	const toggleMobileMenu = () => {
 		setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -12,6 +15,12 @@ export const NavBar = () => {
 
 	const closeMobileMenu = () => {
 		setIsMobileMenuOpen(false);
+	};
+
+	const handleSignOut = () => {
+		userCtx.signUserOut();
+		closeMobileMenu();
+		navigate('/');
 	};
 
 	return (
@@ -44,6 +53,13 @@ export const NavBar = () => {
 							</li>
 						);
 					})}
+					{userCtx.isAuthenticated && (
+						<li>
+							<button className="nav-bar-btn sign-out-btn" onClick={handleSignOut}>
+								Sign Out
+							</button>
+						</li>
+					)}
 				</ul>
 			</div>
 		</nav>

@@ -42,6 +42,7 @@ ul {
 	margin: 0;
 	opacity: 0.9;
 	font-weight: 400;
+	font-family: 'Times New Roman', Times, serif;
 }
 
 .nav-bar-menu {
@@ -83,6 +84,18 @@ ul {
 
 .nav-bar-btn:active {
 	transform: translateY(0);
+}
+
+.sign-out-btn {
+	background: rgba(255, 255, 255, 0.15);
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	font-weight: 600;
+}
+
+.sign-out-btn:hover {
+	background: rgba(255, 255, 255, 0.25);
+	border-color: white;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Mobile Menu Toggle Button */

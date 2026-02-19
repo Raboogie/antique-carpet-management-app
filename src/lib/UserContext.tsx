@@ -9,17 +9,17 @@ export type UserContextValue = {
 	setUserId: (id: string) => void;
 	userRole: string;
 	setUserRole: (role: string) => void;
-	signedIn: boolean;
-	setSignedIn: (value: boolean) => void;
+	isAuthenticated: boolean;
+	setIsAuthenticated: (value: boolean) => void;
 	userEmail: string | null;
 	setUserEmail: (email: string | null) => void;
 	displayName: string;
 	setDisplayName: (name: string) => void;
 	currentUser: User | null;
-	loading: boolean;
+	isLoading: boolean;
 	signUserOut: () => void;
 };
-// loggedIn
+
 type userContextProviderProps = {
 	children: React.ReactNode;
 };
@@ -36,12 +36,12 @@ export const useUserContext = () => {
 
 const UserContextProvider = ({ children }: userContextProviderProps) => {
 	const [userId, setUserId] = useState<string>('');
-	const [signedIn, setSignedIn] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [userRole, setUserRole] = useState<string>('');
 	const [userEmail, setUserEmail] = useState<string | null>('');
 	const [displayName, setDisplayName] = useState<string>('');
 	const [currentUser, setCurrentUser] = useState<User | null>(null);
-	const [loading, setLoading] = useState<boolean>(true);
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 
 	const addUserId = (value: string) => {
 		setUserId(value);
@@ -66,7 +66,7 @@ const UserContextProvider = ({ children }: userContextProviderProps) => {
 				setUserRole('');
 				setUserEmail('');
 				setDisplayName('');
-				setSignedIn(false);
+				setIsAuthenticated(false);
 				console.log('inside firebase async signOut function');
 			})
 			.catch((error) => {
@@ -90,16 +90,16 @@ const UserContextProvider = ({ children }: userContextProviderProps) => {
 						setCurrentUser(user);
 						addUserId(user.uid);
 						createUserEmail(user.email);
-						setSignedIn(true);
-						setLoading(false);
+						setIsAuthenticated(true);
+						setIsLoading(false);
 					} else {
 						// docSnap.data() will be undefined in this case
 						console.log('No such document!');
-						setLoading(false);
+						setIsLoading(false);
 					}
 				} else {
 					setCurrentUser(null);
-					setLoading(false);
+					setIsLoading(false);
 				}
 			}
 		);
@@ -111,19 +111,19 @@ const UserContextProvider = ({ children }: userContextProviderProps) => {
 		setUserId,
 		userRole,
 		setUserRole,
-		signedIn,
-		setSignedIn,
+		isAuthenticated,
+		setIsAuthenticated,
 		setUserEmail,
 		userEmail,
 		displayName,
 		setDisplayName,
 		currentUser,
-		loading,
+		isLoading,
 		signUserOut,
 	};
 	return (
 		<UserContext.Provider value={contextValue}>
-			{!loading && children}
+			{!isLoading && children}
 		</UserContext.Provider>
 	);
 };
