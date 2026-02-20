@@ -1,5 +1,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap');
+
+/* Custom Fonts from the design */
+@font-face {
+  font-family: 'Haffer XH';
+  src: url('https://framerusercontent.com/assets/vftVnc6yUzw6474LMjfC8eXV7hE.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Haffer XH';
+  src: url('https://framerusercontent.com/assets/YAgYmyrrj1l3cmkK6S9uOWUs.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Haffer XH';
+  src: url('https://framerusercontent.com/assets/boI4aFZH6kEFuh34ef3aytFig.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #181824;
+  --accent-color: #ff3b26;
+  --secondary-text: #5e5e68;
+  --card-bg: #f5f5f7;
+  --section-bg: #fafafa;
+}
 
 * {
 	box-sizing: border-box;
@@ -12,9 +46,10 @@ html {
 }
 
 body {
-	font-family: 'Inter', 'Roboto', sans-serif;
+	font-family: 'Inter', sans-serif;
 	line-height: 1.6;
-	color: #333;
+	color: var(--text-color);
+	background-color: var(--bg-color);
 	overflow-x: hidden;
 }
 
@@ -30,7 +65,9 @@ body {
 	position: sticky;
 	top: 0;
 	z-index: 1000;
-	box-shadow: 0 2px 10px rgba(84, 58, 183, 0.15);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
 }
 
 /* Main Content Area */

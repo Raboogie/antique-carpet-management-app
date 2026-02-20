@@ -1,7 +1,7 @@
-import { CarpetDataType } from '../../lib/firebase/FireBaseCarpet.ts';
+import { CarpetDataTypeWithDate } from '../../lib/firebase/FireBaseCarpet.ts';
 
 type CarpetDetailsProps = {
-    carpet: CarpetDataType;
+    carpet: CarpetDataTypeWithDate;
 };
 
 export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
