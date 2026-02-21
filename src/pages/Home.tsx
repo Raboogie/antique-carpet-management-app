@@ -1,6 +1,6 @@
 import { HomePageData } from '../lib/constants/HomePageData';
+import { Link } from 'react-router';
 import '../Css/pages/Home.css';
-
 const Home = () => {
 	return (
 		<div className="home-container">
@@ -13,9 +13,9 @@ const Home = () => {
 					Discover our curated collection of antique and handmade rugs. 
 					Each piece tells a story of craftsmanship and heritage.
 				</p>
-				<a href="/shop" className="cta-button">
+				<Link to="/search" className="cta-button">
 					Explore Collection
-				</a>
+				</Link>
 			</section>
 			<section className="carpets-section">
 				<h2 className="section-title">Featured Masterpieces</h2>

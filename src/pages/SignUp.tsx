@@ -1,64 +1,101 @@
-import {ChangeEvent, FormEvent, useState} from "react";
-import {createUser} from "../lib/firebase/Authentication/EmailAndPasswordAuth.ts";
-import {useNavigate} from "react-router";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { createUser } from "../lib/firebase/Authentication/EmailAndPasswordAuth.ts";
+import { Link, useNavigate } from "react-router";
 import "../Css/pages/SignUp.css";
 
 
-const  SignUp= () => {
-    const [formSignUpData, setFormSignUpData] = useState({
-        name: '',
-        email: '',
-        password: ''
-    });
-    let navigate = useNavigate();
+const SignUp = () => {
+	const [formSignUpData, setFormSignUpData] = useState({
+		name: "",
+		email: "",
+		password: "",
+	});
+	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 
-    const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        setFormSignUpData({
-            ...formSignUpData,
-            [name]: value
-        })
-    }
+	const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		setFormSignUpData({
+			...formSignUpData,
+			[name]: value,
+		});
+	};
 
-    const handleSignUpSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(formSignUpData);
+	const handleSignUpSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setError(null);
 
-        if(formSignUpData.name !== null && formSignUpData.email !== null) {
-            createUser(formSignUpData.email, formSignUpData.password).then( (result) => {
-                console.log(result);
-                if(result) {
-                    navigate("/login");
-                } else {
-                    //todo - use a generic error or find a way to display specific errors returned from firebase.
-                    alert("Email already exists");
-                }
-            });
-        } else {
-            alert("Invalid name or password");
-        }
-    }
-    return (
-        <>
-            <section className="signUpSection">
-                <div className={"SignUpContainer"}>
-                    <h1>Sign Up</h1>
-                    <form onSubmit={handleSignUpSubmit}>
-                        <label>Name</label>
-                        <input onChange={handleOnChange} name="name" type="text"/>
+		if (formSignUpData.name !== null && formSignUpData.email !== null) {
+			createUser(formSignUpData.email, formSignUpData.password).then(
+				(result) => {
+					if (result) {
+						navigate("/login");
+					} else {
+						setError("An account with this email already exists.");
+					}
+				}
+			);
+		} else {
+			setError("Please enter a valid name and email.");
+		}
+	};
 
-                        <label>Email</label>
-                        <input onChange={handleOnChange} name="email" type="email"/>
+	return (
+		<div className="auth-page">
+			<div className="auth-card">
+				<h1>Create Account</h1>
+				<p className="auth-subtitle">
+					Join us to manage your carpet collection
+				</p>
 
-                        <label>Password</label>
-                        <input onChange={handleOnChange} name="password" type="password"/>
+				{error && <p className="auth-error">{error}</p>}
 
-                        <button className="btnContainer" type="submit">Sign Up</button>
-                    </form>
-                </div>
-            </section>
-        </>
-    );
+				<form className="auth-form" onSubmit={handleSignUpSubmit}>
+					<div className="auth-input-group">
+						<label htmlFor="name">Name</label>
+						<input
+							id="name"
+							onChange={handleOnChange}
+							name="name"
+							type="text"
+							placeholder="Enter your full name"
+						/>
+					</div>
+
+					<div className="auth-input-group">
+						<label htmlFor="email">Email</label>
+						<input
+							id="email"
+							onChange={handleOnChange}
+							name="email"
+							type="email"
+							placeholder="Enter your email"
+						/>
+					</div>
+
+					<div className="auth-input-group">
+						<label htmlFor="password">Password</label>
+						<input
+							id="password"
+							onChange={handleOnChange}
+							name="password"
+							type="password"
+							placeholder="Create a password"
+						/>
+					</div>
+
+					<button className="auth-submit-btn" type="submit">
+						Create Account
+					</button>
+				</form>
+
+				<p className="auth-footer">
+					Already have an account?
+					<Link to="/login">Sign In</Link>
+				</p>
+			</div>
+		</div>
+	);
 };
 
 export default SignUp;

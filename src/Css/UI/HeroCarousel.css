@@ -1,0 +1,206 @@
+/* ===== Carousel Container ===== */
+.hero-carousel {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+/* ===== Single Card Layout ===== */
+.hero-carousel-single {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  min-height: 280px;
+}
+
+/* ===== Individual Card ===== */
+.hero-carpet-card {
+  flex: 1;
+  max-width: 700px;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1.25rem;
+  backdrop-filter: blur(6px);
+}
+
+/* ===== Image ===== */
+.hero-carpet-image-wrapper {
+  flex-shrink: 0;
+  width: 200px;
+  height: 240px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.hero-carpet-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 6s ease-out;
+}
+
+.hero-carousel-single.animating .hero-carpet-image {
+  transform: scale(1.08);
+}
+
+/* ===== Text ===== */
+.hero-carpet-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.hero-carpet-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+.hero-carpet-description {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(224, 224, 224, 0.85);
+  margin: 0;
+  font-weight: 300;
+}
+
+/* ===== Slide Animations ===== */
+
+/* Image from left */
+.slide-from-left {
+  opacity: 0;
+  transform: translateX(-60px);
+}
+
+.hero-carousel-single.animating .slide-from-left {
+  animation: slideInLeft 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Image from right */
+.slide-from-right {
+  opacity: 0;
+  transform: translateX(60px);
+}
+
+.hero-carousel-single.animating .slide-from-right {
+  animation: slideInRight 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Title from top */
+.slide-from-top {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.hero-carousel-single.animating .slide-from-top {
+  animation: slideInTop 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+/* Description from bottom */
+.slide-from-bottom {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero-carousel-single.animating .slide-from-bottom {
+  animation: slideInBottom 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+}
+
+/* ===== Keyframes ===== */
+@keyframes slideInLeft {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInTop {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInBottom {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Dot Indicators ===== */
+.hero-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.hero-dot.active {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: scale(1.2);
+}
+
+.hero-dot:hover:not(.active) {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .hero-carousel-pair {
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  .hero-carpet-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-carousel {
+    padding: 1.25rem 1rem;
+  }
+
+  .hero-carpet-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-carpet-image-wrapper {
+    width: 100%;
+    height: 180px;
+  }
+
+  .hero-carpet-title {
+    font-size: 1.1rem;
+  }
+
+  .hero-carpet-description {
+    font-size: 0.85rem;
+  }
+}
