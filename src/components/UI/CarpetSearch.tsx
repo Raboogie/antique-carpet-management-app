@@ -8,7 +8,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useUserContext } from '../../lib/UserContext.tsx';
-import {useEffect, useState, useMemo} from 'react';
+import {useEffect, useState} from 'react';
 import {ImageGrid} from './ImageGrid.tsx';
 import {CarpetCardImage} from './CarpetCardImage.tsx';
 import {useForm, SubmitHandler, Controller} from 'react-hook-form';
@@ -61,59 +61,62 @@ interface CarpetSearchProps {
 	displayDefaultComponent: boolean;
 }
 
+// Helper function to parse initial search params
+function parseInitialSearchParams(urlSearchParams: URLSearchParams): SearchParams | null {
+	const searchTypeParam = urlSearchParams.get('searchType') as 'number' | 'dimensions' | 'type' | null;
+	if (!searchTypeParam) return null;
+
+	switch (searchTypeParam) {
+		case 'number': {
+			const carpetNum = urlSearchParams.get('carpetNum');
+			return carpetNum ? { type: 'number', carpetNum } : null;
+		}
+		case 'dimensions': {
+			const maxWidth = Number(urlSearchParams.get('maxWidth'));
+			const maxLength = Number(urlSearchParams.get('maxLength'));
+			if (!maxWidth || !maxLength) return null;
+			return {
+				type: 'dimensions',
+				maxWidth,
+				minWidth: Number(urlSearchParams.get('minWidth')) || null,
+				maxLength,
+				minLength: Number(urlSearchParams.get('minLength')) || null,
+			};
+		}
+		case 'type': {
+			const carpetType = urlSearchParams.get('carpetType');
+			return carpetType ? { type: 'type', carpetType } : null;
+		}
+		default:
+			return null;
+	}
+}
+
+function parseInitialTab(urlSearchParams: URLSearchParams): string {
+	const searchTypeParam = urlSearchParams.get('searchType');
+	if (searchTypeParam === 'number') return '1';
+	if (searchTypeParam === 'dimensions') return '2';
+	if (searchTypeParam === 'type') return '3';
+	return '1';
+}
+
 export default function CarpetSearch({toggleDefaultComponent, displayDefaultComponent}: CarpetSearchProps) {
 	const [urlSearchParams, setUrlSearchParams] = useSearchParams();
-	const [alignment, setAlignment] = React.useState('View Catalog');
+	const [viewMode, setViewMode] = React.useState('View Catalog');
 
-	// Restore search state from URL on mount
-	const initialSearchParams = useMemo<SearchParams | null>(() => {
-		const searchTypeParam = urlSearchParams.get('searchType') as 'number' | 'dimensions' | 'type' | null;
-		if (!searchTypeParam) return null;
+	// Initialize state lazily based on URL params
+	const [value, setValue] = useState(() => parseInitialTab(urlSearchParams));
+	const [searchParams, setSearchParams] = useState<SearchParams | null>(() => parseInitialSearchParams(urlSearchParams));
+	const [searchType, setSearchType] = useState<'number' | 'dimensions' | 'type' | null>(
+		searchParams?.type ?? null
+	);
 
-		switch (searchTypeParam) {
-			case 'number': {
-				const carpetNum = urlSearchParams.get('carpetNum');
-				return carpetNum ? { type: 'number', carpetNum } : null;
-			}
-			case 'dimensions': {
-				const maxWidth = Number(urlSearchParams.get('maxWidth'));
-				const maxLength = Number(urlSearchParams.get('maxLength'));
-				if (!maxWidth || !maxLength) return null;
-				return {
-					type: 'dimensions',
-					maxWidth,
-					minWidth: Number(urlSearchParams.get('minWidth')) || null,
-					maxLength,
-					minLength: Number(urlSearchParams.get('minLength')) || null,
-				};
-			}
-			case 'type': {
-				const carpetType = urlSearchParams.get('carpetType');
-				return carpetType ? { type: 'type', carpetType } : null;
-			}
-			default:
-				return null;
-		}
-	}, []); // Only compute once on mount
-
-	const initialTab = useMemo(() => {
-		const searchTypeParam = urlSearchParams.get('searchType');
-		if (searchTypeParam === 'number') return '1';
-		if (searchTypeParam === 'dimensions') return '2';
-		if (searchTypeParam === 'type') return '3';
-		return '1';
-	}, []); // Only compute once on mount
-
-	const [value, setValue] = useState(initialTab);
 	const userCtx = useUserContext();
 	const queryClient = useQueryClient();
 	const isAdmin = userCtx.userRole === 'Admin';
-	const [searchParams, setSearchParams] = useState<SearchParams | null>(initialSearchParams);
+
 	const { data: carpets, isLoading, isError, error } = useCarpets(searchParams);
 	const [displaySwitch, setDisplaySwitch] = useState(false);
-	const [searchType, setSearchType] = useState<'number' | 'dimensions' | 'type' | null>(
-		initialSearchParams?.type ?? null
-	);
 
 	const {register, handleSubmit, formState: { errors }, reset, setError, clearErrors, control} = useForm<SearchFormData>({
 		defaultValues: {
@@ -191,7 +194,7 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
 
 	const handleSwitchChange = (_event: React.MouseEvent<HTMLElement>,
 								 newAlignment: string) => {
-		setAlignment(newAlignment);
+		setViewMode(newAlignment);
 		toggleDefaultComponent(!displayDefaultComponent);
 	};
 
@@ -214,7 +217,7 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
 						{displaySwitch && (<>
 							<ToggleButtonGroup
 								color="primary"
-								value={alignment}
+								value={viewMode}
 								exclusive
 								onChange={handleSwitchChange}
 								aria-label="Platform"

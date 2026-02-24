@@ -84,6 +84,14 @@ export const ImageGrid = ({ imageUrls, isAdmin = false, carpetNum, onImageDelete
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [selectedImageIndex, imageUrls.length]);
 
+    // Safety check: Adjust selection if the underlying array changes (e.g., external deletion)
+    useEffect(() => {
+        if (selectedImageIndex !== null && selectedImageIndex >= imageUrls.length) {
+            // If the index is out of bounds, reset to the last valid image or close if empty
+            setSelectedImageIndex(imageUrls.length > 0 ? imageUrls.length - 1 : null);
+        }
+    }, [imageUrls, selectedImageIndex]);
+
     return (
         <>
             <div className="imageGrid-container">

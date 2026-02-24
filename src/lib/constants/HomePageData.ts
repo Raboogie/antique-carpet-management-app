@@ -49,13 +49,13 @@ interface Carpet {
 export const carpetData: Carpet[] = [
 	{
 		id: 'isfahan',
-		title: 'The Classic Persian Isfahan',
+		title: 'Classic Isfahan',
 		description: '17th-century weaving tradition with intricate floral motifs and a central medallion.',
 		imageUrl: './images/PersianIsfahan.png',
 	},
 	{
-		id: 'ushak',
-		title: 'The Geometric Turkish Ushak',
+		id: 'serapi',
+		title: 'Serapi',
 		description: 'Late 19th-century piece featuring bold, geometric designs and a relaxed weave.',
 		imageUrl: './images/TurkishUshak.png',
 	},
@@ -67,25 +67,25 @@ export const carpetData: Carpet[] = [
 	},
 	{
 		id: 'khotan',
-		title: 'The Khotan Runner',
+		title: 'Khotan Runner',
 		description: 'East Turkestan blend of Chinese and Central Asian designs with a repeating pomegranate motif.',
 		imageUrl: './images/Khotan-Rug.png',
 	},
 	{
 		id: 'kazak',
-		title: 'The Antique Kazak',
+		title: 'Antique Kazak',
 		description: 'A powerful statement from the Caucasus with vibrant colors and interconnected medallions.',
 		imageUrl: './images/Kazak-Rug.png',
 	},
 	{
 		id: 'kerman',
-		title: 'The Persian Kerman',
+		title: 'Kerman',
 		description: 'A masterpiece of floral design in soft pastel colors, bringing elegance and grandeur.',
 		imageUrl: './images/Kerman-Rug.png',
 	},
 	{
 		id: 'silk',
-		title: 'The Silk Persian',
+		title: 'Silk Persian',
 		description: 'An exquisite prayer rug featuring a finely detailed tree of life motif and a luxurious sheen.',
 		imageUrl: './images/Silk-Persian-Rug.png',
 	}
