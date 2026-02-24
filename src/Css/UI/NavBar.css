@@ -27,13 +27,14 @@ ul {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	font-family: 'Times New Roman', Times, serif;
 }
 
 .nav-logo h1 {
 	font-size: clamp(1.5rem, 4vw, 2.5rem);
 	text-decoration: underline;
 	font-weight: 700;
-	margin: 0;
+	margin-left: 1px;
 	line-height: 1.1;
 }
 
@@ -42,7 +43,6 @@ ul {
 	margin: 0;
 	opacity: 0.9;
 	font-weight: 400;
-	font-family: 'Times New Roman', Times, serif;
 }
 
 .nav-bar-menu {
@@ -211,10 +211,6 @@ ul {
 @media (max-width: 480px) {
 	.nav-bar {
 		padding: 0.5rem 0.75rem;
-	}
-
-	.nav-logo h1 {
-		font-size: 1.5rem;
 	}
 
 	.nav-logo h6 {
