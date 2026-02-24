@@ -29,10 +29,8 @@ export const createUser = async (email: string, password: string): Promise<boole
     try {
         const userCredentialResults = await createUserWithEmailAndPassword(authentication, email, password);
         const user = userCredentialResults.user;
-        // Assign "Basic" role to the new user
         await addUserToDatabase(user, "Basic");
         await sendEmailVerification(user);
-        console.log("sent email verification successfully");
         return true;
     } catch (error) {
         console.log(error);

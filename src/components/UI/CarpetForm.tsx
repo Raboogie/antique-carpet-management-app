@@ -1,15 +1,22 @@
-import { Typography } from '@mui/material';
+import Typography from "@mui/material/Typography";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormHelperText from '@mui/material/FormHelperText';
 import '../../Css/UI/CarpetForm.css';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import FileUpload from './FileUpload.tsx';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useImageStorage } from '../../hooks/useImageStorage.ts';
+import {CarpetStyles} from "../../lib/constants/CarpetStyles.ts";
+import {ToggleButton, ToggleButtonGroup} from "@mui/material";
+import * as React from 'react';
+import {useUserContext} from "../../lib/UserContext.tsx";
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
 	'image/jpeg',
 	'image/jpg',
@@ -41,7 +48,12 @@ const userInputSchema = z.object({
 
 export type InputFormData = z.infer<typeof userInputSchema>;
 
-export default function CarpetForm() {
+interface CarpetFormProps {
+	toggleDefaultComponent: (value: boolean) => void;
+	displayDefaultComponent: boolean;
+}
+
+export default function CarpetForm({toggleDefaultComponent, displayDefaultComponent}: CarpetFormProps) {
 	const {
 		register,
 		handleSubmit,
@@ -55,6 +67,7 @@ export default function CarpetForm() {
 		defaultValues: {
 			unit: 'Feet',
 			image: [],
+            carpetType: '',
 		},
 	});
 
@@ -63,7 +76,18 @@ export default function CarpetForm() {
 	const [submittedData, setSubmittedData] = useState<InputFormData | null>(
 		null
 	);
+	const userCtx = useUserContext();
+	const [alignment, setAlignment] = React.useState('Add New Carpet');
+	const [displaySwitch, setDisplaySwitch] = useState(false);
 	const { progress } = useImageStorage(submittedData);
+
+	useEffect(() => {
+		if (userCtx) {
+			if (userCtx.userRole === 'Admin') {
+				setDisplaySwitch(true);
+			}
+		}
+	}, [userCtx]);
 
 	const onSubmit: SubmitHandler<InputFormData> = (data) => {
 		console.log('Form Data Submitted:', data);
@@ -74,9 +98,29 @@ export default function CarpetForm() {
 		reset();
 	};
 
+	const handleSwitchChange = (_event: React.MouseEvent<HTMLElement>,
+								 newAlignment: string) => {
+		setAlignment(newAlignment);
+		toggleDefaultComponent(!displayDefaultComponent);
+	};
+
 	return (
 		<div className="carpet-details-container">
 			<div className="carpet-details-header">
+				<div>
+					{displaySwitch && (<>
+						<ToggleButtonGroup
+							color="primary"
+							value={alignment}
+							exclusive
+							onChange={handleSwitchChange}
+							aria-label="Platform"
+						>
+							<ToggleButton value="View Catalog">View Catalog</ToggleButton>
+							<ToggleButton value="Add New Carpet">Add New Carpet</ToggleButton>
+						</ToggleButtonGroup>
+					</>)}
+				</div>
 				<h1>✨ Luxury Carpet Details</h1>
 				<p>
 					Create your perfect carpet profile with style and elegance
@@ -105,36 +149,31 @@ export default function CarpetForm() {
 					</div>
 					<div className="carpet-details-info-type">
 						<label htmlFor="carpetType">Carpet Type</label>
-						<TextField
-							{...register('carpetType')}
-							id="carpetType"
+						<Controller
 							name="carpetType"
-							label="Enter carpet type (Persian, Turkish, etc.)"
-							variant="outlined"
-							size="medium"
-							fullWidth={true}
-							error={!!errors.carpetType}
-							helperText={errors.carpetType?.message}
+							control={control}
+							render={({ field }) => (
+								<Select
+									{...field}
+									labelId="carpetType"
+									id="carpetType"
+									fullWidth={true}
+									error={!!errors.carpetType}
+								>
+									{CarpetStyles.map((style) => (
+										<MenuItem key={style.style} value={style.style}>
+											{style.style}
+										</MenuItem>
+									))}
+								</Select>
+							)}
 						/>
+                        {errors.carpetType && <FormHelperText error>{errors.carpetType.message}</FormHelperText>}
 					</div>
 				</div>
 
 				{/* Size Section */}
 				<div className="carpet-details-dimensions-section">
-					<div className="carpet-details-dimensions-width">
-						<label htmlFor="carpetWidth">Width</label>
-						<TextField
-							{...register('width', { valueAsNumber: true })}
-							id="carpetWidth"
-							name="width"
-							label="Width"
-							variant="outlined"
-							size="medium"
-							fullWidth={true}
-							error={!!errors.width}
-							helperText={errors.width?.message}
-						/>
-					</div>
 					<div className="carpet-details-dimensions-length">
 						<label htmlFor="carpetLength">Length</label>
 						<TextField
@@ -147,6 +186,20 @@ export default function CarpetForm() {
 							fullWidth={true}
 							error={!!errors.length}
 							helperText={errors.length?.message}
+						/>
+					</div>
+					<div className="carpet-details-dimensions-width">
+						<label htmlFor="carpetWidth">Width</label>
+						<TextField
+							{...register('width', { valueAsNumber: true })}
+							id="carpetWidth"
+							name="width"
+							label="Width"
+							variant="outlined"
+							size="medium"
+							fullWidth={true}
+							error={!!errors.width}
+							helperText={errors.width?.message}
 						/>
 					</div>
 					<p className="carpet-details-dimensions-unit-label">

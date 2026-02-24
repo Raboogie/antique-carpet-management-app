@@ -4,10 +4,10 @@ import '../../Css/UI/FileUpload.css';
 interface FileUploadProps {
 	onFileSelect: (files: File[]) => void;
 	error?: string;
-	value?: File[]; // Receive current value from react-hook-form
+	value?: File[];
 }
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
 	'image/jpeg',
 	'image/jpg',

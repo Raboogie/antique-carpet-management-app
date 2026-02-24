@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiPhone } from "react-icons/fi";
 import { IoLocationOutline } from "react-icons/io5";
-import * as React from "react";
 import {z} from "zod";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -102,9 +101,14 @@ export const ContactForm = () => {
                         />
                         <div className="contactForm-button-container">
                             <Button type="submit" variant="contained">
-                                Search Carpet
+                                Submit
                             </Button>
                         </div>
+                        {formStatus.message && (
+                            <p className={`form-status ${formStatus.type}`}>
+                                {formStatus.message}
+                            </p>
+                        )}
                     </form>
                 </div>
                 <div className="contact-location-details">
