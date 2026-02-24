@@ -28,7 +28,7 @@ const Home = () => {
 							<div className="carpet-details">
 								<h4 className="carpet-title">{title}</h4>
 								<p className="carpet-desc">{desc}</p>
-								<a href={`/product/${id}`} className="carpet-link">View Details</a>
+								{/*<a href={`/product/${id}`} className="carpet-link">View Details</a>*/}
 							</div>
 						</article>
 					))}
