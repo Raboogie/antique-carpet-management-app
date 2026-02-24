@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { createUser } from "../lib/firebase/Authentication/EmailAndPasswordAuth.ts";
 import { Link, useNavigate } from "react-router";
+import { toast } from 'react-toastify';
 import "../Css/pages/SignUp.css";
 
 
@@ -9,6 +10,7 @@ const SignUp = () => {
 		name: "",
 		email: "",
 		password: "",
+		confirmPassword: "",
 	});
 	const [error, setError] = useState<string | null>(null);
 	const navigate = useNavigate();
@@ -25,13 +27,22 @@ const SignUp = () => {
 		e.preventDefault();
 		setError(null);
 
+		if (formSignUpData.password !== formSignUpData.confirmPassword) {
+			setError("Passwords do not match.");
+			return;
+		}
+
 		if (formSignUpData.name !== null && formSignUpData.email !== null) {
 			createUser(formSignUpData.email, formSignUpData.password).then(
 				(result) => {
 					if (result) {
-						navigate("/login");
+						toast.info(
+							'✉️ Account created! Please check your email to verify your address, then sign in.',
+							{ autoClose: 6000 }
+						);
+						setTimeout(() => navigate("/login"), 6000);
 					} else {
-						setError("An account with this email already exists.");
+						setError("Problem creating account. Please try again.");
 					}
 				}
 			);
@@ -81,6 +92,17 @@ const SignUp = () => {
 							name="password"
 							type="password"
 							placeholder="Create a password"
+						/>
+					</div>
+
+					<div className="auth-input-group">
+						<label htmlFor="confirmPassword">Confirm Password</label>
+						<input
+							id="confirmPassword"
+							onChange={handleOnChange}
+							name="confirmPassword"
+							type="password"
+							placeholder="Re-enter your password"
 						/>
 					</div>
 

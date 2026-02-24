@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import '../../Css/UI/ImageGrid.css';
-import { IconButton } from '@mui/material';
+import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteCarpetImage } from '../../lib/firebase/FireBaseCarpet';
 
 type ImageGridProps = {
     imageUrls: string[];
+    isAdmin?: boolean;
+    carpetNum?: string;
+    onImageDeleted?: (deletedUrl: string) => void;
 }
 
-export const ImageGrid = ({ imageUrls }: ImageGridProps) => {
+export const ImageGrid = ({ imageUrls, isAdmin = false, carpetNum, onImageDeleted }: ImageGridProps) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+    const [deleteTarget, setDeleteTarget] = useState<{ url: string; index: number } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const openModal = (index: number) => {
         setSelectedImageIndex(index);
@@ -39,6 +46,30 @@ export const ImageGrid = ({ imageUrls }: ImageGridProps) => {
         }
     };
 
+    const handleDeleteClick = (e: React.MouseEvent, url: string, index: number) => {
+        e.stopPropagation();
+        setDeleteTarget({ url, index });
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!deleteTarget || !carpetNum) return;
+
+        setIsDeleting(true);
+        try {
+            await deleteCarpetImage(carpetNum, deleteTarget.url);
+            onImageDeleted?.(deleteTarget.url);
+        } catch (err) {
+            console.error('Error deleting image:', err);
+        } finally {
+            setIsDeleting(false);
+            setDeleteTarget(null);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteTarget(null);
+    };
+
     // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,6 +94,16 @@ export const ImageGrid = ({ imageUrls }: ImageGridProps) => {
                         onClick={() => openModal(index)}
                     >
                         <img src={imgUrl} alt={`Carpet view ${index + 1}`} loading="lazy" />
+                        {isAdmin && carpetNum && (
+                            <IconButton
+                                className="image-delete-btn"
+                                onClick={(e) => handleDeleteClick(e, imgUrl, index)}
+                                aria-label="delete image"
+                                size="small"
+                            >
+                                <DeleteIcon fontSize="small" />
+                            </IconButton>
+                        )}
                     </div>
                 ))}
             </div>
@@ -114,6 +155,31 @@ export const ImageGrid = ({ imageUrls }: ImageGridProps) => {
                     </div>
                 </div>
             )}
+            
+            <Dialog
+                open={deleteTarget !== null}
+                onClose={handleDeleteCancel}
+            >
+                <DialogTitle>Delete Image</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this image? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} disabled={isDeleting}>
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={handleDeleteConfirm} 
+                        color="error" 
+                        variant="contained"
+                        disabled={isDeleting}
+                    >
+                        {isDeleting ? 'Deleting...' : 'Delete'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };

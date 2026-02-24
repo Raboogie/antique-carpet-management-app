@@ -40,6 +40,27 @@
     transform: scale(1.05);
 }
 
+/* Delete button on image hover */
+.image-delete-btn {
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    opacity: 0;
+    color: white !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    transition: opacity 0.2s ease, background-color 0.2s ease !important;
+    padding: 6px !important;
+}
+
+.image-item:hover .image-delete-btn {
+    opacity: 1;
+}
+
+.image-delete-btn:hover {
+    background-color: rgba(211, 47, 47, 0.9) !important;
+}
+
 /* Modal Styles */
 .modal-overlay {
     position: fixed;

@@ -62,20 +62,17 @@ export const useImageStorage = (data: InputFormData | null) => {
                 const docSnap = await getDoc(docRef);
 
                 if (!docSnap.exists()) {
+                    // Create new carpet document with all details
                     await setDoc(docRef, {
                         ...carpetData,
                         imageUrls: downloadedUrls,
                         createdAt: serverTimestamp(),
                     });
                 } else {
-                    await updateDoc(docRef,{
-                        "carpetType": carpetData.carpetType,
-                        "length": carpetData.length,
-                        "width": carpetData.width,
-                        "unit": carpetData.unit,
-                        "imageUrls": arrayUnion(...downloadedUrls),
-                        createdAt: serverTimestamp()
-                    })
+                    // Update existing carpet - only append new image URLs
+                    await updateDoc(docRef, {
+                        imageUrls: arrayUnion(...downloadedUrls),
+                    });
                 }
 
 				// await addDoc(collection(db, 'carpets'), {
