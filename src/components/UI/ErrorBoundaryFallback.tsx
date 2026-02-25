@@ -2,7 +2,7 @@ import React from 'react';
 import { FallbackProps } from 'react-error-boundary';
 import '../../Css/UI/ErrorBoundaryFallback.css';
 
-export const FullPageErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
+export const FullPageErrorFallback: React.FC<FallbackProps> = ({ resetErrorBoundary }) => {
   return (
     <div className="full-page-error-container">
       <h2>Oops! Something went wrong.</h2>
