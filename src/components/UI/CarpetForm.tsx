@@ -69,7 +69,7 @@ function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: Carpe
 		defaultValues: {
 			unit: 'Feet',
 			image: [],
-            carpetType: '',
+            carpetType: CarpetStyles[0]?.style || '',
 		},
 	});
 
