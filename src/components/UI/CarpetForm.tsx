@@ -15,6 +15,8 @@ import {CarpetStyles} from "../../lib/constants/CarpetStyles.ts";
 import {ToggleButton, ToggleButtonGroup} from "@mui/material";
 import * as React from 'react';
 import {useUserContext} from "../../lib/UserContext.tsx";
+import { ErrorBoundary } from 'react-error-boundary';
+import { WidgetErrorFallback } from './ErrorBoundaryFallback';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -53,7 +55,7 @@ interface CarpetFormProps {
 	displayDefaultComponent: boolean;
 }
 
-export default function CarpetForm({toggleDefaultComponent, displayDefaultComponent}: CarpetFormProps) {
+function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: CarpetFormProps) {
 	const {
 		register,
 		handleSubmit,
@@ -67,7 +69,7 @@ export default function CarpetForm({toggleDefaultComponent, displayDefaultCompon
 		defaultValues: {
 			unit: 'Feet',
 			image: [],
-            carpetType: '',
+            carpetType: CarpetStyles[0]?.style || '',
 		},
 	});
 
@@ -280,4 +282,12 @@ export default function CarpetForm({toggleDefaultComponent, displayDefaultCompon
 			</form>
 		</div>
 	);
+}
+
+export default function CarpetForm(props: CarpetFormProps) {
+    return (
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+            <CarpetFormBase {...props} />
+        </ErrorBoundary>
+    );
 }

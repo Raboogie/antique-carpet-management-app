@@ -6,6 +6,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteCarpetImage } from '../../lib/firebase/FireBaseCarpet';
+import { ErrorBoundary } from 'react-error-boundary';
+import { WidgetErrorFallback } from './ErrorBoundaryFallback';
 
 type ImageGridProps = {
     imageUrls: string[];
@@ -14,7 +16,7 @@ type ImageGridProps = {
     onImageDeleted?: (deletedUrl: string) => void;
 }
 
-export const ImageGrid = ({ imageUrls, isAdmin = false, carpetNum, onImageDeleted }: ImageGridProps) => {
+const ImageGridBase = ({ imageUrls, isAdmin = false, carpetNum, onImageDeleted }: ImageGridProps) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
     const [deleteTarget, setDeleteTarget] = useState<{ url: string; index: number } | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -189,5 +191,13 @@ export const ImageGrid = ({ imageUrls, isAdmin = false, carpetNum, onImageDelete
                 </DialogActions>
             </Dialog>
         </>
+    );
+};
+
+export const ImageGrid = (props: ImageGridProps) => {
+    return (
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+            <ImageGridBase {...props} />
+        </ErrorBoundary>
     );
 };

@@ -120,7 +120,7 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
 
 	const {register, handleSubmit, formState: { errors }, reset, setError, clearErrors, control} = useForm<SearchFormData>({
 		defaultValues: {
-			carpetType: '',
+			carpetType: CarpetStyles[0]?.style || '',
 		}
 	});
 

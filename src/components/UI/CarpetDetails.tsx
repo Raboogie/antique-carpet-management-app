@@ -8,14 +8,14 @@ type CarpetDetailsProps = {
 export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
     return (
         <div className="carpet-details-card">
-            <div className="carpet-details-header">
+            <div className="searched-carpet-details-header">
                 <div className="detail-item">
                     <span className="detail-label">Carpet Number</span>
                     <h3 className='carpet-number-label'>{carpet.carpetNum}</h3>
                 </div>
                 <span className="carpet-type-badge">{carpet.carpetType}</span>
             </div>
-            <div className="carpet-details-body">
+            <div className="searched-carpet-details-body">
                 <div className="detail-item">
                     <span className="detail-label">Dimensions</span>
                     <span className="detail-value">

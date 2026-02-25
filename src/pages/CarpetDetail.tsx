@@ -7,6 +7,8 @@ import { useUserContext } from '../lib/UserContext';
 import '../Css/pages/CarpetDetail.css';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { ErrorBoundary } from 'react-error-boundary';
+import { FullPageErrorFallback } from '../components/UI/ErrorBoundaryFallback';
 
 export default function CarpetDetail() {
     const { carpetNum } = useParams<{ carpetNum: string }>();
@@ -97,16 +99,20 @@ export default function CarpetDetail() {
                 <h1>Carpet Details</h1>
             </div>
             <div className="carpet-detail-content">
-                <CarpetDetails carpet={carpet} />
-                <div className="carpet-detail-images">
-                    <h2>Images</h2>
-                    <ImageGrid
-                        imageUrls={carpet.imageUrls}
-                        isAdmin={isAdmin}
-                        carpetNum={carpet.carpetNum}
-                        onImageDeleted={handleImageDeleted}
-                    />
-                </div>
+                <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
+                    <CarpetDetails carpet={carpet} />
+                    <div className="carpet-detail-images">
+                        <h2>Images</h2>
+                        <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
+                            <ImageGrid
+                                imageUrls={carpet.imageUrls}
+                                isAdmin={isAdmin}
+                                carpetNum={carpet.carpetNum}
+                                onImageDeleted={handleImageDeleted}
+                            />
+                        </ErrorBoundary>
+                    </div>
+                </ErrorBoundary>
             </div>
         </div>
     );

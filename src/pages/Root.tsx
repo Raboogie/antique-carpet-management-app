@@ -3,6 +3,8 @@ import { NavBar } from '../components/UI/NavBar';
 import { FooterMain } from "../components/UI/FooterMain.tsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ErrorBoundary } from 'react-error-boundary';
+import { FullPageErrorFallback } from '../components/UI/ErrorBoundaryFallback';
 
 export default function Root() {
 	return (
@@ -12,7 +14,9 @@ export default function Root() {
 					<NavBar />
 				</nav>
 				<div className="main-content">
-					<Outlet />
+					<ErrorBoundary FallbackComponent={FullPageErrorFallback}>
+					    <Outlet />
+                    </ErrorBoundary>
 				</div>
                 <div>
                     <FooterMain/>
