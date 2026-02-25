@@ -3,6 +3,8 @@ import CarpetForm from '../components/UI/CarpetForm';
 import '../Css/pages/Search.css';
 import CarpetSearch from '../components/UI/CarpetSearch.tsx';
 import { useUserContext } from '../lib/UserContext.tsx';
+import { ErrorBoundary } from 'react-error-boundary';
+import { FullPageErrorFallback } from '../components/UI/ErrorBoundaryFallback';
 
 const Search = () => {
 	const [displayDefaultComponent, setDisplayDefaultComponent] = useState(true);
@@ -22,10 +24,12 @@ const Search = () => {
 				<div className="display-carpet-form-btn">
 				</div>
 				<div>
+                    <ErrorBoundary FallbackComponent={FullPageErrorFallback}>
 					{displayDefaultComponent
 						? <CarpetSearch toggleDefaultComponent={setDisplayDefaultComponent} displayDefaultComponent={displayDefaultComponent}/>
 						: <CarpetForm toggleDefaultComponent={setDisplayDefaultComponent} displayDefaultComponent={displayDefaultComponent}/>
 					}
+                    </ErrorBoundary>
 				</div>
 			</div>
 		</>

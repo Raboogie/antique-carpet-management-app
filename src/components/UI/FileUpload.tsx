@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../Css/UI/FileUpload.css';
+import { ErrorBoundary } from 'react-error-boundary';
+import { WidgetErrorFallback } from './ErrorBoundaryFallback';
 
 interface FileUploadProps {
 	onFileSelect: (files: File[]) => void;
@@ -15,7 +17,7 @@ const ACCEPTED_IMAGE_TYPES = [
 	'image/webp',
 ];
 
-export default function FileUpload({
+function FileUploadBase({
 	onFileSelect,
 	error,
 	value = [],
@@ -99,4 +101,12 @@ export default function FileUpload({
 			</div>
 		</div>
 	);
+}
+
+export default function FileUpload(props: FileUploadProps) {
+    return (
+        <ErrorBoundary FallbackComponent={WidgetErrorFallback}>
+            <FileUploadBase {...props} />
+        </ErrorBoundary>
+    );
 }
