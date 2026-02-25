@@ -1,12 +1,7 @@
 import React from 'react';
-
-// Props for the fallback component provided by react-error-boundary
 import { FallbackProps } from 'react-error-boundary';
 import '../../Css/UI/ErrorBoundaryFallback.css';
 
-/**
- * A full-page error fallback. Useful for the Root boundary or page-level boundaries.
- */
 export const FullPageErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
   return (
     <div className="full-page-error-container">
@@ -14,10 +9,10 @@ export const FullPageErrorFallback: React.FC<FallbackProps> = ({ error, resetErr
       <p className="full-page-error-message">
         We're sorry, but an unexpected error occurred.
       </p>
-      {/* Optionally display the error message in development/staging, but maybe hide in prod */}
-      <pre className="full-page-error-details">
+      {/* Hide in prod */}
+      {/* <pre className="full-page-error-details">
         {error instanceof Error ? error.message : String(error)}
-      </pre>
+      </pre> */}
       <button 
         onClick={resetErrorBoundary}
         className="full-page-error-retry-btn"
@@ -28,9 +23,7 @@ export const FullPageErrorFallback: React.FC<FallbackProps> = ({ error, resetErr
   );
 };
 
-/**
- * A smaller widget-level error fallback. Useful for specific components like forms or image grids.
- */
+
 export const WidgetErrorFallback: React.FC<FallbackProps> = ({ error, resetErrorBoundary }) => {
   return (
     <div className="widget-error-container">
