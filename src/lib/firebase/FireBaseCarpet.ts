@@ -1,5 +1,5 @@
 
-import {collection, doc, getDoc, getDocs, query, Timestamp, where, QueryConstraint, updateDoc, arrayRemove} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, query, Timestamp, where, QueryConstraint, updateDoc, arrayRemove, deleteDoc} from "firebase/firestore";
 import {ref, deleteObject} from "firebase/storage";
 import {db, fireBaseStorage} from "./index.ts";
 
@@ -103,22 +103,56 @@ export const getCarpetByType = async (carpetType: string): Promise<CarpetDataTyp
  * Removes the file from Firebase Storage and the URL from the Firestore imageUrls array.
  */
 export const deleteCarpetImage = async (carpetNum: string, imageUrl: string): Promise<void> => {
-    // Extract the storage path from the download URL
-    // Firebase Storage download URLs contain the path encoded between /o/ and ?
-    const url = new URL(imageUrl);
-    const pathSegment = url.pathname.split('/o/')[1];
-    if (!pathSegment) {
-        throw new Error(`Could not extract storage path from image URL: ${imageUrl}`);
+    try {
+        // Extract the storage path from the download URL
+        // Firebase Storage download URLs contain the path encoded between /o/ and ?
+        const url = new URL(imageUrl);
+        const pathSegment = url.pathname.split('/o/')[1];
+        if (pathSegment) {
+            const storagePath = decodeURIComponent(pathSegment);
+            // Delete from Firebase Storage
+            const storageRef = ref(fireBaseStorage, storagePath);
+            await deleteObject(storageRef);
+        } else {
+            console.warn(`Could not extract storage path from image URL: ${imageUrl}`);
+        }
+    } catch (err) {
+        console.warn(`Skipped storage deletion for invalid image URL ${imageUrl}:`, err);
     }
-    const storagePath = decodeURIComponent(pathSegment);
-
-    // Delete from Firebase Storage
-    const storageRef = ref(fireBaseStorage, storagePath);
-    await deleteObject(storageRef);
 
     // Remove the URL from the Firestore document's imageUrls array
     const docRef = doc(db, 'carpets', carpetNum);
     await updateDoc(docRef, {
         imageUrls: arrayRemove(imageUrl),
     });
+};
+
+/**
+ * Deletes a carpet document and all its associated images.
+ */
+export const deleteCarpet = async (carpetNum: string, imageUrls: string[]): Promise<void> => {
+    // Delete all images first
+    const deleteImagePromises = imageUrls.map(async (imageUrl) => {
+        try {
+            const url = new URL(imageUrl);
+            const pathSegment = url.pathname.split('/o/')[1];
+            if (!pathSegment) {
+                console.warn(`Could not extract storage path from image URL: ${imageUrl}`);
+                return;
+            }
+            const storagePath = decodeURIComponent(pathSegment);
+            
+            // Delete from Firebase Storage
+            const storageRef = ref(fireBaseStorage, storagePath);
+            await deleteObject(storageRef);
+        } catch (err) {
+            console.error(`Failed to delete image ${imageUrl}:`, err);
+        }
+    });
+
+    await Promise.all(deleteImagePromises);
+
+    // Delete carpet document
+    const docRef = doc(db, 'carpets', carpetNum);
+    await deleteDoc(docRef);
 };

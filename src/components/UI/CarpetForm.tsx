@@ -92,8 +92,8 @@ function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: Carpe
 	}, [userCtx]);
 
 	const onSubmit: SubmitHandler<InputFormData> = (data) => {
-		console.log('Form Data Submitted:', data);
-		console.log(data.image);
+		//console.log('Form Data Submitted:', data);
+		//console.log(data.image);
 		setSubmittedData(data);
 		console.log('Progress %', progress);
 		setSuccessMessage('Form submitted successfully');
