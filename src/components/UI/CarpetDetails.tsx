@@ -6,6 +6,9 @@ type CarpetDetailsProps = {
 };
 
 export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
+    const isFeet = carpet.unit === 'Feet';
+    const unitLabel = isFeet ? 'ft' : 'm';
+
     return (
         <div className="carpet-details-card">
             <div className="searched-carpet-details-header">
@@ -19,8 +22,23 @@ export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
                 <div className="detail-item">
                     <span className="detail-label">Dimensions</span>
                     <span className="detail-value">
-                        {carpet.length} <span style={{color: '#cbd5e1', margin: '0 4px'}}>×</span> {carpet.width} 
-                        <span className="detail-value-unit">{carpet.unit}</span>
+                        {carpet.length}
+                        <span className="dimension-separator">{unitLabel}</span>
+                        {isFeet && carpet.lengthInches != null && carpet.lengthInches > 0 && (
+                            <>
+                                {carpet.lengthInches}
+                                <span className="dimension-separator">in</span>
+                            </>
+                        )}
+                        <span className="dimension-by-separator">×</span>
+                        {carpet.width}
+                        <span className="dimension-separator">{unitLabel}</span>
+                        {isFeet && carpet.widthInches != null && carpet.widthInches > 0 && (
+                            <>
+                                {carpet.widthInches}
+                                <span className="dimension-separator">in</span>
+                            </>
+                        )}
                     </span>
                 </div>
             </div>

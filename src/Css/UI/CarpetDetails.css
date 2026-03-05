@@ -166,3 +166,13 @@
         flex-direction: column;
     }
 }
+
+.dimension-separator {
+    margin: 4px;
+    font-size: .95rem;
+}
+
+.dimension-by-separator {
+    color: gray;
+    margin: 4px 8px 4px 4px;
+}
