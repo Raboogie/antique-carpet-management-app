@@ -11,6 +11,8 @@ export type CarpetDataType =  {
     length: number;
     unit: string;
     width: number;
+    lengthInches?: number;
+    widthInches?: number;
 }
 export type CarpetDataTypeWithDate = Omit<CarpetDataType, "createdAt"> & {
     createdAt: Date;

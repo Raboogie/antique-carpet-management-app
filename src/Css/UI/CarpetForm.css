@@ -131,7 +131,7 @@
 	border: 1px solid rgba(255, 255, 255, 0.2);
 	transition: all 0.3s ease;
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
 	gap: 2rem;
 }
 
@@ -175,6 +175,18 @@
 	grid-column: 1 / -1;
 	font-weight: 500;
 	font-size: 0.95rem;
+}
+
+.dimensions-feet-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
+}
+
+.dimensions-inches-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
 }
 
 .carpet-details-dimensions-unit-label {

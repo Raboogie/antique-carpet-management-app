@@ -1,3 +1,4 @@
+import { useState, useRef, useCallback } from 'react';
 import '../../Css/UI/ImageGrid.css';
 import { useNavigate, useLocation } from 'react-router';
 
@@ -10,6 +11,9 @@ type CarpetCardImageProps = {
 export const CarpetCardImage = ({ imageUrl, carpetNum, altText }: CarpetCardImageProps) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [isPressed, setIsPressed] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const handleClick = () => {
         navigate(`/carpet/${carpetNum}`, {
@@ -17,10 +21,25 @@ export const CarpetCardImage = ({ imageUrl, carpetNum, altText }: CarpetCardImag
         });
     };
 
+    const startLongPress = useCallback(() => {
+        timerRef.current = setTimeout(() => {
+            setIsPressed(true);
+            // Auto-dismiss the overlay after 3s so it doesn't stay stuck
+            resetTimerRef.current = setTimeout(() => setIsPressed(false), 3000);
+        }, 500);
+    }, []);
+
+    const cancelLongPress = useCallback(() => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    }, []);
+
     return (
         <div className="carpet-card-image-container">
             <div
-                className="carpet-card-image-item"
+                className={`carpet-card-image-item${isPressed ? ' is-long-pressed' : ''}`}
                 onClick={handleClick}
                 role="button"
                 tabIndex={0}
@@ -30,6 +49,11 @@ export const CarpetCardImage = ({ imageUrl, carpetNum, altText }: CarpetCardImag
                         handleClick();
                     }
                 }}
+                onTouchStart={(e) => { e.stopPropagation(); startLongPress(); }}
+                onTouchEnd={cancelLongPress}
+                onTouchCancel={cancelLongPress}
+                // Prevent "Save Image" / "Copy" OS popup during long-press on mobile
+                onContextMenu={(e) => e.preventDefault()}
             >
                 <img
                     src={imageUrl}
@@ -43,5 +67,3 @@ export const CarpetCardImage = ({ imageUrl, carpetNum, altText }: CarpetCardImag
         </div>
     );
 };
-
-

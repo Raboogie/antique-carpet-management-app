@@ -198,6 +198,13 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
 		toggleDefaultComponent(!displayDefaultComponent);
 	};
 
+	const handleCarpetDeleted = (deletedCarpetNum: string) => {
+		queryClient.setQueryData<CarpetDataTypeWithDate[]>(
+			['carpets', searchParams],
+			(old) => old?.filter((c) => c.carpetNum !== deletedCarpetNum)
+		);
+	};
+
 	const handleImageDeleted = (carpetNum: string, deletedUrl: string) => {
 		queryClient.setQueryData<CarpetDataTypeWithDate[]>(
 			['carpets', searchParams],
@@ -377,7 +384,10 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
                     {isError && <p>Error loading carpets: {error?.message}</p>}
                     {!isLoading && !isError && (searchType === 'number') && carpets?.map((carpet) => (
                         <div className="carpet-search-result-items" key={carpet.carpetNum}>
-                            <CarpetDetails carpet={carpet} />
+                            <CarpetDetails
+                                carpet={carpet}
+                                {...(isAdmin && { onDeleted: handleCarpetDeleted })}
+                            />
                             <ImageGrid
                                 imageUrls={carpet.imageUrls}
                                 isAdmin={isAdmin}
@@ -388,7 +398,10 @@ export default function CarpetSearch({toggleDefaultComponent, displayDefaultComp
                     ))}
                     {!isLoading && !isError && (searchType === 'dimensions' || searchType === 'type') && carpets?.map((carpet) => (
                         <div className="carpet-search-result-items" key={carpet.carpetNum}>
-                            <CarpetDetails carpet={carpet} />
+                            <CarpetDetails
+                                carpet={carpet}
+                                {...(isAdmin && { onDeleted: handleCarpetDeleted })}
+                            />
                             {carpet.imageUrls && carpet.imageUrls.length > 0 && (
                                 <CarpetCardImage
                                     imageUrl={carpet.imageUrls[0]}

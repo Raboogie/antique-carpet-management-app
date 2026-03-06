@@ -33,6 +33,11 @@ const userInputSchema = z.object({
 	carpetType: z.string().nonempty('Carpet Type is required'),
 	width: z.number().min(1, 'Width is required').transform(Number),
 	length: z.number().min(1, 'Length is required').transform(Number),
+	// We use z.number().optional() here instead of z.coerce.number() or z.preprocess
+	// because React Hook Form handles the string-to-number parsing natively via 'setValueAs' in the JSX.
+	// This avoids Zod returning "Expected number, received NaN" when the input is cleared.
+	widthInches: z.number().optional(),
+	lengthInches: z.number().optional(),
 	unit: z.string(),
 	image: z
 		.array(z.instanceof(File))
@@ -54,6 +59,8 @@ interface CarpetFormProps {
 	toggleDefaultComponent: (value: boolean) => void;
 	displayDefaultComponent: boolean;
 }
+
+const parseOptionalNumber = (v: unknown) => v === "" || v == null || isNaN(Number(v)) ? undefined : Number(v);
 
 function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: CarpetFormProps) {
 	const {
@@ -176,34 +183,77 @@ function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: Carpe
 
 				{/* Size Section */}
 				<div className="carpet-details-dimensions-section">
-					<div className="carpet-details-dimensions-length">
-						<label htmlFor="carpetLength">Length</label>
-						<TextField
-							{...register('length', { valueAsNumber: true })}
-							id="carpetLength"
-							name="length"
-							label="Length"
-							variant="outlined"
-							size="medium"
-							fullWidth={true}
-							error={!!errors.length}
-							helperText={errors.length?.message}
-						/>
+					<div className="dimensions-feet-container">
+						<div className="carpet-details-dimensions-length">
+							<label htmlFor="carpetLength">Length</label>
+							<TextField
+								{...register('length', { valueAsNumber: true })}
+								id="carpetLength"
+								name="length"
+								label={currentUnit === 'Feet' ? 'Feet' : 'Meters'}
+								variant="outlined"
+								size="medium"
+								fullWidth={true}
+								error={!!errors.length}
+								helperText={errors.length?.message}
+							/>
+						</div>
+						<div className="carpet-details-dimensions-width">
+							<label htmlFor="carpetWidth">Width</label>
+							<TextField
+								{...register('width', { valueAsNumber: true })}
+								id="carpetWidth"
+								name="width"
+								label={currentUnit === 'Feet' ? 'Feet' : 'Meters'}
+								variant="outlined"
+								size="medium"
+								fullWidth={true}
+								error={!!errors.width}
+								helperText={errors.width?.message}
+							/>
+						</div>
 					</div>
-					<div className="carpet-details-dimensions-width">
-						<label htmlFor="carpetWidth">Width</label>
-						<TextField
-							{...register('width', { valueAsNumber: true })}
-							id="carpetWidth"
-							name="width"
-							label="Width"
-							variant="outlined"
-							size="medium"
-							fullWidth={true}
-							error={!!errors.width}
-							helperText={errors.width?.message}
-						/>
-					</div>
+					
+					{currentUnit === 'Feet' && (
+						<div className="dimensions-inches-container">
+							<div className="carpet-details-dimensions-lengthInches">
+								{/* 
+									We use setValueAs instead of valueAsNumber: true. 
+									When an input is cleared, it emits "". valueAsNumber turns "" into NaN, which breaks Zod validation. 
+									This intercepts the "" (or null/NaN) and cleanly converts it to undefined before handing it to Zod. This is needed because the schema is optional. If we don't do this, the schema will not accept undefined values. It avoids Zod returning "Expected number, received NaN" when the input is cleared/empty.
+								*/}
+								<TextField
+									{...register('lengthInches', { setValueAs: parseOptionalNumber })}
+									id="carpetLengthInches"
+									name="lengthInches"
+									label="Inches"
+									variant="outlined"
+									size="medium"
+									fullWidth={true}
+									error={!!errors.lengthInches}
+									helperText={errors.lengthInches?.message}
+								/>
+							</div>
+							<div className="carpet-details-dimensions-widthInches">
+								{/* 
+									Same logic as lengthInches: safely catch empty or invalid inputs 
+									and pass undefined to Zod so the optional schema accepts it without NaN errors.
+								*/}
+								<TextField
+									{...register('widthInches', { setValueAs: parseOptionalNumber })}
+									id="carpetWidthInches"
+									name="widthInches"
+									label="Inches"
+									variant="outlined"
+									size="medium"
+									fullWidth={true}
+									error={!!errors.widthInches}
+									helperText={errors.widthInches?.message}
+								/>
+							</div>
+						</div>
+					)}
+				
 					<p className="carpet-details-dimensions-unit-label">
 						Unit of Measurement
 					</p>
@@ -246,7 +296,6 @@ function CarpetFormBase({toggleDefaultComponent, displayDefaultComponent}: Carpe
 					</div>
 				</div>
 
-				{/* Success message */}
 				{successMessage && (
 					<div className="success-message">
 						{successMessage}! Your carpet details have been saved.

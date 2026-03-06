@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import '../../Css/UI/ImageGrid.css';
 import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,6 +15,64 @@ type ImageGridProps = {
     carpetNum?: string;
     onImageDeleted?: (deletedUrl: string) => void;
 }
+
+/**
+ * Renders a single image card with long-press detection for mobile.
+ * On touch devices (hover: none), a 500ms hold reveals the admin delete button
+ * via the `is-long-pressed` class. The contextmenu event is suppressed to
+ * prevent the OS "Save Image" popup from appearing during the hold.
+ */
+type ImageItemProps = {
+    imgUrl: string;
+    index: number;
+    isAdmin: boolean;
+    onOpen: (index: number) => void;
+    onDeleteClick: (e: React.MouseEvent, url: string, index: number) => void;
+};
+
+const ImageItem = ({ imgUrl, index, isAdmin, onOpen, onDeleteClick }: ImageItemProps) => {
+    const [isPressed, setIsPressed] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const startLongPress = useCallback(() => {
+        timerRef.current = setTimeout(() => {
+            setIsPressed(true);
+        }, 500);
+    }, []);
+
+    const cancelLongPress = useCallback(() => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+        // Delay reset so the user can still tap the revealed button
+        setTimeout(() => setIsPressed(false), 3000);
+    }, []);
+
+    return (
+        <div
+            className={`image-item${isPressed ? ' is-long-pressed' : ''}`}
+            onClick={() => onOpen(index)}
+            onTouchStart={(e) => { e.stopPropagation(); startLongPress(); }}
+            onTouchEnd={cancelLongPress}
+            onTouchCancel={cancelLongPress}
+            // Prevent "Save Image" OS popup on long-press
+            onContextMenu={(e) => e.preventDefault()}
+        >
+            <img src={imgUrl} alt={`Carpet view ${index + 1}`} loading="lazy" />
+            {isAdmin && (
+                <IconButton
+                    className="image-delete-btn"
+                    onClick={(e) => onDeleteClick(e, imgUrl, index)}
+                    aria-label="delete image"
+                    size="small"
+                >
+                    <DeleteIcon fontSize="small" />
+                </IconButton>
+            )}
+        </div>
+    );
+};
 
 const ImageGridBase = ({ imageUrls, isAdmin = false, carpetNum, onImageDeleted }: ImageGridProps) => {
     const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -98,23 +156,14 @@ const ImageGridBase = ({ imageUrls, isAdmin = false, carpetNum, onImageDeleted }
         <>
             <div className="imageGrid-container">
                 {imageUrls && imageUrls.map((imgUrl, index) => (
-                    <div 
-                        className="image-item" 
+                    <ImageItem
                         key={imgUrl}
-                        onClick={() => openModal(index)}
-                    >
-                        <img src={imgUrl} alt={`Carpet view ${index + 1}`} loading="lazy" />
-                        {isAdmin && carpetNum && (
-                            <IconButton
-                                className="image-delete-btn"
-                                onClick={(e) => handleDeleteClick(e, imgUrl, index)}
-                                aria-label="delete image"
-                                size="small"
-                            >
-                                <DeleteIcon fontSize="small" />
-                            </IconButton>
-                        )}
-                    </div>
+                        imgUrl={imgUrl}
+                        index={index}
+                        isAdmin={isAdmin && !!carpetNum}
+                        onOpen={openModal}
+                        onDeleteClick={handleDeleteClick}
+                    />
                 ))}
             </div>
 

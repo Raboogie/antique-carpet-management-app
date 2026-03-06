@@ -168,7 +168,32 @@
     to { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive adjustments */
+/* Hover effects — only on true pointer devices to avoid sticky-hover on mobile */
+@media (hover: hover) {
+    .image-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-item:hover img {
+        transform: scale(1.05);
+    }
+
+    /* Show delete button on card hover (desktop only) */
+    .image-item:hover .image-delete-btn {
+        opacity: 1;
+    }
+
+    .image-delete-btn:hover {
+        background-color: rgba(211, 47, 47, 0.9) !important;
+    }
+}
+
+/* Long-press fallback for touch devices — reveals delete button after hold */
+.image-item.is-long-pressed .image-delete-btn {
+    opacity: 1;
+}
+
 @media (max-width: 768px) {
     .modal-nav-btn {
         background-color: rgba(0, 0, 0, 0.5) !important;
@@ -210,10 +235,27 @@
     position: relative;
 }
 
-.carpet-card-image-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+/* Hover effects — only on true pointer devices */
+@media (hover: hover) {
+    .carpet-card-image-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .carpet-card-image-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .carpet-card-image-item:hover .carpet-card-overlay {
+        opacity: 1;
+    }
 }
+
+/* Long-press fallback: reveals overlay on touch devices */
+.carpet-card-image-item.is-long-pressed .carpet-card-overlay {
+    opacity: 1;
+}
+
 
 .carpet-card-image-item:focus {
     outline: 2px solid #1976d2;
@@ -227,9 +269,6 @@
     transition: transform 0.5s ease;
 }
 
-.carpet-card-image-item:hover img {
-    transform: scale(1.05);
-}
 
 .carpet-card-overlay {
     position: absolute;
@@ -244,10 +283,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.carpet-card-image-item:hover .carpet-card-overlay {
-    opacity: 1;
 }
 
 .carpet-card-overlay span {

@@ -58,13 +58,22 @@ export const useImageStorage = (data: InputFormData | null) => {
 				// Add carpet data to Firestore
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const { image, ...carpetData } = data;
+				
+				// Firestore strictly rejects 'undefined' values in document payloads.
+				// Since we made lengthInches and widthInches optional (which evaluate to undefined when empty),
+				// passing them directly to setDoc() causes a silent "Unsupported field value: undefined" crash.
+				// This filter creates a clean copy of the data with all undefined keys stripped out.
+				const cleanCarpetData = Object.fromEntries(
+					Object.entries(carpetData).filter(([, v]) => v !== undefined)
+				) as Omit<InputFormData, 'image'>;
+
 				const docRef = doc(db, 'carpets', `${carpetData.carpetNum}`);
                 const docSnap = await getDoc(docRef);
 
                 if (!docSnap.exists()) {
                     // Create new carpet document with all details
                     await setDoc(docRef, {
-                        ...carpetData,
+                        ...cleanCarpetData,
                         imageUrls: downloadedUrls,
                         createdAt: serverTimestamp(),
                     });
