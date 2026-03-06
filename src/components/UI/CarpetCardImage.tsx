@@ -25,8 +25,8 @@ export const CarpetCardImage = ({ imageUrl, carpetNum, altText }: CarpetCardImag
         timerRef.current = setTimeout(() => {
             setIsPressed(true);
             // Auto-dismiss the overlay after 3s so it doesn't stay stuck
-            resetTimerRef.current = setTimeout(() => setIsPressed(false), 3000);
-        }, 500);
+            resetTimerRef.current = setTimeout(() => setIsPressed(false), 4000);
+        }, 300);
     }, []);
 
     const cancelLongPress = useCallback(() => {

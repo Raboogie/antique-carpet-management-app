@@ -32,8 +32,8 @@ export const CarpetDetails = ({ carpet, onDeleted }: CarpetDetailsProps) => {
         timerRef.current = setTimeout(() => {
             setIsPressed(true);
             // Auto-dismiss after 3s so the button doesn't stay visible indefinitely
-            resetTimerRef.current = setTimeout(() => setIsPressed(false), 3000);
-        }, 500);
+            resetTimerRef.current = setTimeout(() => setIsPressed(false), 4000);
+        }, 300);
     }, []);
 
     const cancelLongPress = useCallback(() => {
