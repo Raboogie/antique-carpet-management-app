@@ -24,14 +24,31 @@
     transition: width 0.3s ease;
 }
 
-.carpet-details-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 14px 45px rgba(84, 58, 183, 0.15);
-    background: rgba(255, 255, 255, 0.9);
+/* Hover effects — only on true pointer devices */
+@media (hover: hover) {
+    .carpet-details-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 45px rgba(84, 58, 183, 0.15);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .carpet-details-card:hover::before {
+        width: 8px;
+    }
+
+    /* Show delete button on card hover (desktop only) */
+    .carpet-details-card:hover .carpet-details-delete-icon-btn {
+        opacity: 1;
+    }
+
+    .carpet-details-delete-icon-btn:hover {
+        background-color: rgba(211, 47, 47, 0.9) !important;
+    }
 }
 
-.carpet-details-card:hover::before {
-    width: 8px;
+/* Long-press fallback: reveals delete button on touch devices */
+.carpet-details-card.is-long-pressed .carpet-details-delete-icon-btn {
+    opacity: 1;
 }
 
 .searched-carpet-details-header {
@@ -48,6 +65,7 @@
     justify-content: space-between;
     align-items: center;
 }
+
 
 .searched-carpet-details-header h3 {
     margin: 0;
@@ -124,6 +142,20 @@
     margin-left: 0.5rem;
     font-weight: 500;
 }
+
+.carpet-details-delete-icon-btn {
+    position: absolute !important;
+    top: 4px;
+    right: 4px;
+    z-index: 10;
+    opacity: 0;
+    color: white !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    transition: opacity 0.2s ease, background-color 0.2s ease !important;
+    padding: 6px !important;
+}
+
+
 
 /* Responsive design */
 @media (max-width: 768px) {

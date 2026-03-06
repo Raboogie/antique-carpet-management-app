@@ -1,16 +1,70 @@
-import { CarpetDataTypeWithDate } from '../../lib/firebase/FireBaseCarpet.ts';
+import { useState, useRef, useCallback } from 'react';
+import { CarpetDataTypeWithDate, deleteCarpet } from '../../lib/firebase/FireBaseCarpet.ts';
+import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
 import '../../Css/UI/CarpetDetails.css';
 
 type CarpetDetailsProps = {
     carpet: CarpetDataTypeWithDate;
+    /**
+     * Called after a carpet is successfully deleted.
+     * When provided, the delete icon button is shown and deletion is handled
+     * internally. The parent is responsible for removing the carpet from its
+     * own state/cache (e.g. on CarpetSearch) or navigating away (CarpetDetail).
+     * When omitted, no delete button is rendered.
+     */
+    onDeleted?: (deletedCarpetNum: string) => void;
 };
 
-export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
+export const CarpetDetails = ({ carpet, onDeleted }: CarpetDetailsProps) => {
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isDeletingCarpet, setIsDeletingCarpet] = useState(false);
     const isFeet = carpet.unit === 'Feet';
     const unitLabel = isFeet ? 'ft' : 'm';
 
+    // Long-press state for mobile — reveals the delete icon button after a 500ms hold
+    const [isPressed, setIsPressed] = useState(false);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const startLongPress = useCallback(() => {
+        timerRef.current = setTimeout(() => {
+            setIsPressed(true);
+            // Auto-dismiss after 3s so the button doesn't stay visible indefinitely
+            resetTimerRef.current = setTimeout(() => setIsPressed(false), 3000);
+        }, 500);
+    }, []);
+
+    const cancelLongPress = useCallback(() => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+        }
+    }, []);
+
+    const handleDeleteCarpetConfirm = async () => {
+        setIsDeletingCarpet(true);
+        try {
+            await deleteCarpet(carpet.carpetNum, carpet.imageUrls);
+            setIsDeleteDialogOpen(false);
+            onDeleted?.(carpet.carpetNum);
+        } catch (err) {
+            console.error('Error deleting carpet:', err);
+        } finally {
+            setIsDeletingCarpet(false);
+        }
+    };
+
     return (
-        <div className="carpet-details-card">
+        <div
+            className={`carpet-details-card${isPressed ? ' is-long-pressed' : ''}`}
+            onTouchStart={(e) => { e.stopPropagation(); startLongPress(); }}
+            onTouchEnd={cancelLongPress}
+            onTouchCancel={cancelLongPress}
+            // Prevent "Save Image" / "Copy" OS popup during long-press on mobile
+            onContextMenu={(e) => e.preventDefault()}
+        >
             <div className="searched-carpet-details-header">
                 <div className="detail-item">
                     <span className="detail-label">Carpet Number</span>
@@ -42,6 +96,45 @@ export const CarpetDetails = ({ carpet }: CarpetDetailsProps) => {
                     </span>
                 </div>
             </div>
+
+            {/* Delete icon button — only shown when a parent provides onDeleted */}
+            {onDeleted && (
+                <>
+                    <IconButton
+                        className="carpet-details-delete-icon-btn"
+                        onClick={() => setIsDeleteDialogOpen(true)}
+                        aria-label="delete carpet"
+                        size="small"
+                    >
+                        <DeleteIcon fontSize="small" />
+                    </IconButton>
+
+                    <Dialog
+                        open={isDeleteDialogOpen}
+                        onClose={() => setIsDeleteDialogOpen(false)}
+                    >
+                        <DialogTitle>Delete Carpet</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to delete this carpet? This action will also delete all its associated images from storage and cannot be undone.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeletingCarpet}>
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={handleDeleteCarpetConfirm}
+                                color="error"
+                                variant="contained"
+                                disabled={isDeletingCarpet}
+                            >
+                                {isDeletingCarpet ? 'Deleting...' : 'Delete'}
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </>
+            )}
         </div>
     );
 };
