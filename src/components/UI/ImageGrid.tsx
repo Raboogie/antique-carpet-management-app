@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import '../../Css/UI/ImageGrid.css';
 import { IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteCarpetImage } from '../../lib/firebase/FireBaseCarpet';
 import { ErrorBoundary } from 'react-error-boundary';
 import { WidgetErrorFallback } from './ErrorBoundaryFallback';
+import { useLongPress } from '../../hooks/useLongPress';
 
 type ImageGridProps = {
     imageUrls: string[];
@@ -31,33 +32,13 @@ type ImageItemProps = {
 };
 
 const ImageItem = ({ imgUrl, index, isAdmin, onOpen, onDeleteClick }: ImageItemProps) => {
-    const [isPressed, setIsPressed] = useState(false);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const startLongPress = useCallback(() => {
-        timerRef.current = setTimeout(() => {
-            setIsPressed(true);
-        }, 300);
-    }, []);
-
-    const cancelLongPress = useCallback(() => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-            timerRef.current = null;
-        }
-        // Delay reset so the user can still tap the revealed button
-        setTimeout(() => setIsPressed(false), 4000);
-    }, []);
+    const { handlers, isPressed } = useLongPress(300, 3000);
 
     return (
         <div
             className={`image-item${isPressed ? ' is-long-pressed' : ''}`}
             onClick={() => onOpen(index)}
-            onTouchStart={(e) => { e.stopPropagation(); startLongPress(); }}
-            onTouchEnd={cancelLongPress}
-            onTouchCancel={cancelLongPress}
-            // Prevent "Save Image" OS popup on long-press
-            onContextMenu={(e) => e.preventDefault()}
+            {...handlers}
         >
             <img src={imgUrl} alt={`Carpet view ${index + 1}`} loading="lazy" />
             {isAdmin && (

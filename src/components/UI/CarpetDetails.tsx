@@ -1,9 +1,10 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState } from 'react';
 import { CarpetDataTypeWithDate, deleteCarpet } from '../../lib/firebase/FireBaseCarpet.ts';
 import { Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import '../../Css/UI/CarpetDetails.css';
+import { useLongPress } from '../../hooks/useLongPress';
 
 type CarpetDetailsProps = {
     carpet: CarpetDataTypeWithDate;
@@ -23,25 +24,8 @@ export const CarpetDetails = ({ carpet, onDeleted }: CarpetDetailsProps) => {
     const isFeet = carpet.unit === 'Feet';
     const unitLabel = isFeet ? 'ft' : 'm';
 
-    // Long-press state for mobile — reveals the delete icon button after a 500ms hold
-    const [isPressed, setIsPressed] = useState(false);
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const startLongPress = useCallback(() => {
-        timerRef.current = setTimeout(() => {
-            setIsPressed(true);
-            // Auto-dismiss after 3s so the button doesn't stay visible indefinitely
-            resetTimerRef.current = setTimeout(() => setIsPressed(false), 4000);
-        }, 300);
-    }, []);
-
-    const cancelLongPress = useCallback(() => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-            timerRef.current = null;
-        }
-    }, []);
+    // Long-press: after 300ms hold, reveals the delete icon button for 3s
+    const { handlers, isPressed } = useLongPress(300, 3000);
 
     const handleDeleteCarpetConfirm = async () => {
         setIsDeletingCarpet(true);
@@ -59,11 +43,7 @@ export const CarpetDetails = ({ carpet, onDeleted }: CarpetDetailsProps) => {
     return (
         <div
             className={`carpet-details-card${isPressed ? ' is-long-pressed' : ''}`}
-            onTouchStart={(e) => { e.stopPropagation(); startLongPress(); }}
-            onTouchEnd={cancelLongPress}
-            onTouchCancel={cancelLongPress}
-            // Prevent "Save Image" / "Copy" OS popup during long-press on mobile
-            onContextMenu={(e) => e.preventDefault()}
+            {...handlers}
         >
             <div className="searched-carpet-details-header">
                 <div className="detail-item">
