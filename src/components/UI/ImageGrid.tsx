@@ -37,7 +37,7 @@ const ImageItem = ({ imgUrl, index, isAdmin, onOpen, onDeleteClick }: ImageItemP
     const startLongPress = useCallback(() => {
         timerRef.current = setTimeout(() => {
             setIsPressed(true);
-        }, 500);
+        }, 300);
     }, []);
 
     const cancelLongPress = useCallback(() => {
@@ -46,7 +46,7 @@ const ImageItem = ({ imgUrl, index, isAdmin, onOpen, onDeleteClick }: ImageItemP
             timerRef.current = null;
         }
         // Delay reset so the user can still tap the revealed button
-        setTimeout(() => setIsPressed(false), 3000);
+        setTimeout(() => setIsPressed(false), 4000);
     }, []);
 
     return (
