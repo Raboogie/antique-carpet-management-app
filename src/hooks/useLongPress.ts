@@ -30,31 +30,44 @@ export type UseLongPressResult = {
 
 export function useLongPress(duration = 300, autoDismissDelay?: number): UseLongPressResult {
     const [isPressed, setIsPressed] = useState(false);
-    const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const timerRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
     const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Tracks whether the long-press threshold was crossed so that onTouchEnd
+    // (cancel) knows whether to hide the UI immediately (short tap) or leave
+    // it visible for the auto-dismiss timer to handle.
+    const hasFiredRef   = useRef(false);
 
     const start = useCallback(() => {
+        hasFiredRef.current = false;
         timerRef.current = setTimeout(() => {
+            hasFiredRef.current = true;
             setIsPressed(true);
 
             // Optionally auto-dismiss after a delay so the revealed UI
             // doesn't stay visible indefinitely if the user doesn't tap it.
             if (autoDismissDelay) {
-                resetTimerRef.current = setTimeout(() => setIsPressed(false), autoDismissDelay);
+                resetTimerRef.current = setTimeout(() => {
+                    hasFiredRef.current = false;
+                    setIsPressed(false);
+                }, autoDismissDelay);
             }
         }, duration);
     }, [duration, autoDismissDelay]);
 
     const cancel = useCallback(() => {
+        // Always clear a still-pending long-press timer (short tap / early release)
         if (timerRef.current) {
             clearTimeout(timerRef.current);
             timerRef.current = null;
         }
-        // Also cancel the auto-dismiss so it doesn't fire after a short tap
-        if (resetTimerRef.current) {
-            clearTimeout(resetTimerRef.current);
-            resetTimerRef.current = null;
+
+        if (hasFiredRef.current) {
+            // Long-press already activated — lifting the finger should NOT hide
+            // the revealed UI. The auto-dismiss timer owns that transition.
+            return;
         }
+
+        // Short tap: long-press never fired, so nothing was revealed — stay hidden.
         setIsPressed(false);
     }, []);
 

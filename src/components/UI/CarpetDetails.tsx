@@ -24,8 +24,8 @@ export const CarpetDetails = ({ carpet, onDeleted }: CarpetDetailsProps) => {
     const isFeet = carpet.unit === 'Feet';
     const unitLabel = isFeet ? 'ft' : 'm';
 
-    // Long-press: after 300ms hold, reveals the delete icon button for 3s
-    const { handlers, isPressed } = useLongPress(300, 3000);
+    // Long-press: after 300ms hold, reveals the delete icon button for 4s
+    const { handlers, isPressed } = useLongPress(300, 4000);
 
     const handleDeleteCarpetConfirm = async () => {
         setIsDeletingCarpet(true);
