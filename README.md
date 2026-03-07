@@ -1,10 +1,10 @@
-Antique Carpet Management App
+# Antique Carpet Management App
 A full-stack web application for cataloguing, searching, and managing an inventory of antique carpets — with role-based access control and real-time cloud persistence.
 
-Overview
+## Overview
 A production-ready inventory management platform built for an antique carpet business. The application enables authenticated users to browse and search the full carpet catalog, while administrators have access to an additional management interface for adding new inventory items, uploading images, and removing records from the system.
 
-Core Features
+# Core Features
 🔍 Multi-Mode Catalog Search
 Users can search the carpet inventory using three independent search strategies:
 
