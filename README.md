@@ -24,8 +24,7 @@ Search state is serialized into and restored from URL query parameters (`useSear
 Each carpet has a dedicated route (`/carpet/:carpetNum`) displaying its full metadata (type, dimensions, unit of measurement) and an interactive image gallery. The detail view integrates with TanStack Query's cache so navigating back to search results is instant.
 
 ### 🖼️ Interactive Image Gallery
-- **Lightbox modal** with full-size image viewer
-- **Keyboard navigation** (← → Escape)
+- **Lightbox modal** with full-size image viewer and keyboard navigation
 - **Touch long-press detection** (custom [useLongPress](file:///Users/ray/Documents/Dev/React/Projects/antique-carpet-management-apps/src/hooks/useLongPress.ts#31-96) hook) to surface admin controls on mobile without a separate UI affordance
 - **Lazy image loading** for performance
 - **Graceful out-of-bounds protection** when images are deleted while the modal is open
@@ -45,12 +44,12 @@ Admins access a structured form ([CarpetForm](file:///Users/ray/Documents/Dev/Re
 - **Unit toggle** (Feet / Meters) that conditionally shows/hides the inches sub-fields
 - **Concurrent multi-file upload** via Firebase Storage's `uploadBytesResumable` with real-time progress tracking
 - **Idempotent Firestore writes** — creates a new document if the carpet number is new, or appends uploaded image URLs to an existing document using `arrayUnion`
-- **Undefined-safe payload sanitization** before writing to Firestore (strips `undefined` fields that would otherwise cause silent crashes)
+- **Payload sanitization** before writing to Firestore (strips `undefined` fields that would otherwise cause silent crashes)
 
 ### 🗑️ Admin — Image & Carpet Deletion
 - **Individual image deletion** — removes the file from Firebase Storage (path decoded from the download URL) and the URL from the Firestore `imageUrls` array via `arrayRemove`
 - **Full carpet deletion** — deletes all storage assets in parallel (`Promise.all`) then removes the Firestore document
-- **Optimistic UI updates** via TanStack Query's `queryClient.setQueryData` for instant feedback without a refetch
+- **Optimized UI updates** via TanStack Query's `queryClient.setQueryData` for instant feedback without a refetch
 
 ### 📬 Contact Form
 An EmailJS-powered contact form for visitor inquiries, without requiring a dedicated backend.
