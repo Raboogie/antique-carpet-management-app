@@ -3,7 +3,7 @@
   width: 100%;
   overflow: hidden;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 50%, #111827 100%);
   padding: 2rem 1.5rem;
   margin-bottom: 1.5rem;
   position: relative;

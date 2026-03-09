@@ -5,11 +5,11 @@
     margin: 0 auto;
     min-height: 100vh;
     border-radius: 10px;
-    background: linear-gradient(
-            135deg,
-            rgba(84, 58, 183, 0.1) 0%,
-            rgba(0, 172, 193, 0.1) 100%
-    );
+    /* background: linear-gradient(
+            180deg,
+            var(--section-bg) 0%,
+            var(--bg-color) 100%
+    ); */
     padding: 2rem;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
@@ -21,8 +21,8 @@
     font-weight: 700;
     background: linear-gradient(
             60deg,
-            rgba(84, 58, 183, 1) 0%,
-            rgba(0, 172, 193, 1) 100%
+            var(--accent-color) 0%,
+            var(--primary-color) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

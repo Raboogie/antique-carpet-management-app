@@ -1,6 +1,6 @@
 :root {
-	--primary: rgba(84, 58, 183, 1);
-	--secondary: #4e4e4e;
+	--primary: var(--accent-color);
+	--secondary: var(--text-color);
 	--error: #ff4a4a;
 }
 
@@ -35,11 +35,11 @@ label input {
 	width: 150px;
 	float: left;
 	font-weight: bold;
-	color: #b4886b;
+	color: var(--accent-gold);
 }
 
 .carpet-data form {
-	background: #b8dfd8;
+	background: var(--section-bg);
 	width: 300px;
 	height: 200px;
 }
@@ -63,16 +63,16 @@ label input {
 	width: 100%;
 	max-width: 400px;
 	text-align: center;
-	border: 2px dashed #ccc;
+	border: 2px dashed var(--secondary-text);
 	padding: 20px;
 	border-radius: 10px;
-	background-color: #f9f9f9;
+	background-color: var(--card-bg);
 }
 
 .image-label {
 	display: inline-block;
 	cursor: pointer;
-	color: #007bff;
+	color: var(--accent-blue);
 	font-weight: bold;
 	margin-top: 10px;
 }

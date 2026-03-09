@@ -26,12 +26,28 @@
 }
 
 :root {
-  --bg-color: #ffffff;
-  --text-color: #181824;
-  --accent-color: #ff3b26;
+  --bg-color: #fdfbf7;      /* Soft antique ivory */
+  --text-color: #263B6A;    /* Deep Indigo/Navy */
+  --accent-color: #b84a39;  /* Rich Rust Red */
+  --primary-color: #DA4848; /* Muted Navy */
   --secondary-text: #5e5e68;
-  --card-bg: #f5f5f7;
-  --section-bg: #fafafa;
+  --card-bg: #ffffff;       /* Slight cream/white */
+  --section-bg: #f4f1eb;    /* Deeper cream/tan */
+  --accent-blue: #5b85aa;   /* Serapi Light Blue */
+  --accent-gold: #c29b62;   /* Muted Gold */
+}
+
+/* ===== Global MUI Overrides ===== */
+/* Override MUI ToggleButton selected state — Serapi Rust Red theme */
+.MuiToggleButton-root.Mui-selected {
+  background-color: var(--accent-color) !important;
+  color: #ffffff !important;
+  border-color: var(--accent-color) !important;
+}
+
+.MuiToggleButton-root.Mui-selected:hover {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
 }
 
 * {
